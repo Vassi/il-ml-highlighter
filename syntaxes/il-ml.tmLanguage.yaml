@@ -1,0 +1,147 @@
+# This is a TextMate grammar for the ILLUSI-OS Markup Language (IL-ML)
+# Save this file as: il-ml.tmLanguage.yaml
+
+name: IL-ML
+scopeName: source.il-ml
+fileTypes: [il-ml, illusi, md] # Added .md for convenience, can be removed
+
+# The main patterns array. The grammar engine works through these rules.
+patterns:
+  - include: '#comments'
+  - include: '#system_ping'
+  - include: '#explicit_blocks'
+  - include: '#implicit_blocks'
+  - include: '#sub_blocks'
+  - include: '#rules_and_declarations'
+  - include: '#envelopes'
+
+# The repository holds our reusable patterns. It's cleaner to define them here.
+repository:
+  comments:
+    name: comment.il-ml
+    patterns:
+      # Single-line comments like // --- Block Header Schema ---
+      - name: comment.line.double-slash.il-ml
+        match: '(//).*$\n?'
+        captures:
+          '1': { name: punctuation.definition.comment.il-ml }
+      # Block comments like /* --- Scoping Rules --- */
+      - name: comment.block.il-ml
+        begin: '/\*'
+        end: '\*/'
+        beginCaptures:
+          '0': { name: punctuation.definition.comment.begin.il-ml }
+        endCaptures:
+          '0': { name: punctuation.definition.comment.end.il-ml }
+
+  system_ping:
+    # A system reminder like ! PROCESS AUDIT...
+    name: meta.system-ping.il-ml
+    match: '^(!)(\s+.*)$'
+    captures:
+      '1': { name: keyword.operator.ping.il-ml }
+      '2': { name: string.unquoted.ping.il-ml }
+
+  implicit_blocks:
+    # This pattern matches an implicit block like # DIRECTIVE: CORE
+    name: meta.block.implicit.il-ml
+    match: '^(#)\s+([A-Z]+)(:)\s*(.*)$'
+    captures:
+      '1': { name: keyword.operator.block.il-ml, patterns: [ { include: '#comments' } ] } # The '#'
+      '2': { name: entity.name.type.block.il-ml } # The BLOCK TYPE
+      '3': { name: punctuation.separator.key-value.il-ml } # The ':'
+      '4': { name: entity.name.function.block.il-ml } # The Name
+
+  explicit_blocks:
+    patterns:
+    # This pattern matches an explicit block start like |> DIRECTIVE: CORE
+    - name: meta.block.explicit.begin.il-ml
+      match: '^(\|>)\s+([A-Z]+)(:)\s*(.*)$'
+      captures:
+        '1': { name: keyword.operator.block.explicit.begin.il-ml } # The '|>'
+        '2': { name: entity.name.type.block.il-ml } # The BLOCK TYPE
+        '3': { name: punctuation.separator.key-value.il-ml } # The ':'
+        '4': { name: entity.name.function.block.il-ml } # The Name
+    # This pattern matches an explicit block end like <|
+    - name: meta.block.explicit.end.il-ml
+      match: '^(<\|)$'
+      captures:
+        '1': { name: keyword.operator.block.explicit.end.il-ml } # The '<|'
+
+  sub_blocks:
+    # Matches ## Group Name (if: condition) or ## Group Name
+    name: meta.sub-block.il-ml
+    match: '^(##)\s+([^()]+)(?:\s*(\(if:.*\)))?$'
+    captures:
+      '1': { name: keyword.operator.group.il-ml } # The '##'
+      '2': { name: entity.name.section.il-ml } # The group name
+      '3': { name: meta.condition.il-ml, patterns: [ { include: '#conditions' } ] } # Capture the (if:...) part
+
+  rules_and_declarations:
+    patterns:
+      # Metadata like @priority: 2
+      - name: meta.directive.metadata.il-ml
+        match: '^(@)\s*([a-zA-Z0-9_-]+)(:)\s*(.*)$'
+        captures:
+          '1': { name: 'keyword.control.at-rule.il-ml' } # The '@'
+          '2': { name: 'variable.parameter.il-ml' } # The key
+          '3': { name: 'punctuation.separator.key-value.il-ml' } # The ':'
+          '4': { name: 'string.unquoted.il-ml' } # The value
+      # Descriptions like ? Explains the INTENT...
+      - name: markup.quote.description.il-ml
+        match: '^(?)\s+.*$'
+        captures:
+          '1': { name: punctuation.definition.quote.begin.il-ml }
+      # Positive imperatives like + You MUST follow...
+      - name: markup.inserted.positive.il-ml
+        match: '^(\+)\s+.*$'
+        captures:
+          '1': { name: punctuation.definition.inserted.il-ml }
+      # Negative constraints like - Do NOT violate...
+      - name: markup.deleted.negative.il-ml
+        match: '^(\-)\s+.*$'
+        captures:
+          '1': { name: punctuation.definition.deleted.il-ml }
+      # Informational like ~ Consider this...
+      - name: markup.italic.informational.il-ml
+        match: '^(~)\s+.*$'
+        captures:
+          '1': { name: punctuation.definition.italic.il-ml }
+      # Format blocks like ~ format: Conflict Report
+      - name: markup.raw.code.block.il-ml
+        begin: '(?i)(~\s*format:.*$\n?)'
+        end: '(?=^#|^\s*$|^[+@?~-])' # Simplified end condition
+        beginCaptures:
+          '1': { name: 'meta.format-line.il-ml' }
+        contentName: 'markup.raw.code.il-ml'
+      # Global variables like $turn_count = ...
+      - name: meta.variable.global.il-ml
+        match: '^(\$)\s*([a-zA-Z0-9_]+)\s*(=)?.*$'
+        captures:
+          '1': { name: 'punctuation.definition.variable.il-ml' } # The '$'
+          '2': { name: 'variable.other.global.il-ml' } # The variable name
+          '3': { name: 'keyword.operator.assignment.il-ml' } # The '='
+      # Local variables like &my_var = ...
+      - name: meta.variable.local.il-ml
+        match: '^(&)\s*([a-zA-Z0-9_]+)\s*(=)?.*$'
+        captures:
+          '1': { name: 'punctuation.definition.variable.il-ml' } # The '&'
+          '2': { name: 'variable.other.local.il-ml' } # The variable name
+          '3': { name: 'keyword.operator.assignment.il-ml' } # The '='
+
+  conditions:
+    patterns:
+      - name: keyword.control.conditional.if.il-ml
+        match: '\b(if)\b'
+      - name: constant.language.boolean.il-ml
+        match: '\b(true|false)\b'
+
+  envelopes:
+    # Grouping markers like <-LOG_START->
+    name: meta.group.marker.il-ml
+    match: '(<-)([A-Za-z0-9_]+?)(_(?:START|END))(->)'
+    captures:
+      '1': { name: punctuation.definition.tag.begin.il-ml }
+      '2': { name: entity.name.tag.il-ml } # The name (LOG, TURN)
+      '3': { name: storage.modifier.il-ml } # The _START or _END
+      '4': { name: punctuation.definition.tag.end.il-ml }
