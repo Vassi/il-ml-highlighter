@@ -2,7 +2,7 @@
   "name": "ilml-syntax-highlighter",
   "displayName": "IL-ML Syntax Highlighter",
   "description": "Syntax highlighting for the ILLUSI-OS Markup Language (IL-ML).",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "publisher": "Vassi-LC",
   "engines": {
     "vscode": "^1.102.0"
