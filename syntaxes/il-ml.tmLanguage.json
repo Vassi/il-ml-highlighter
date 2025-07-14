@@ -2,46 +2,48 @@
     "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
     "name": "IL-ML",
     "patterns": [
-        { "include": "#comments" },
-        { "include": "#system_ping" },
-        { "include": "#explicit_blocks" },
-        { "include": "#group_envelopes" },
-        { "include": "#directives" },
-        { "include": "#sub_blocks" },
-        { "include": "#variables" }
+        {
+            "include": "#variables"
+        },
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#explicit_blocks"
+        },
+        {
+            "include": "#conditional_modifiers"
+        },
+        {
+            "include": "#templates"
+        },
+        {
+            "include": "#directives"
+        },
+        {
+            "include": "#sub_blocks"
+        }
     ],
     "repository": {
         "comments": {
             "patterns": [
                 {
                     "name": "comment.line.slash.il-ml",
-                    "match": "^\\s*/(?!/\\*|#).*$"
+                    "match": "^\\s*//.*$"
                 },
                 {
                     "name": "comment.block.il-ml",
                     "begin": "/\\*",
                     "end": "\\*/",
                     "beginCaptures": {
-                        "0": { "name": "punctuation.definition.comment.begin.il-ml" }
+                        "0": {
+                            "name": "punctuation.definition.comment.begin.il-ml"
+                        }
                     },
                     "endCaptures": {
-                        "0": { "name": "punctuation.definition.comment.end.il-ml" }
-                    }
-                },
-                {
-                    "name": "comment.block.section.il-ml",
-                    "match": "^\\s*//===.*===//\\s*$"
-                }
-            ]
-        },
-        "system_ping": {
-            "patterns": [
-                {
-                    "name": "meta.system.ping.il-ml",
-                    "match": "^\\s*(!)\\s+(.*)$",
-                    "captures": {
-                        "1": { "name": "keyword.control.system.il-ml" },
-                        "2": { "name": "string.unquoted.system.il-ml" }
+                        "0": {
+                            "name": "punctuation.definition.comment.end.il-ml"
+                        }
                     }
                 }
             ]
@@ -52,104 +54,27 @@
                     "name": "meta.block.explicit.il-ml",
                     "match": "^(\\s*)(\\/# )\\s*([A-Z]+)(:)\\s*(.*)$",
                     "captures": {
-                        "2": { "name": "punctuation.definition.block.begin.il-ml" },
-                        "3": { "name": "entity.name.type.class.il-ml" },
-                        "4": { "name": "punctuation.separator.key-value.il-ml" },
-                        "5": { "name": "entity.name.function.il-ml" }
+                        "2": {
+                            "name": "punctuation.definition.block.begin.il-ml"
+                        },
+                        "3": {
+                            "name": "entity.name.type.class.il-ml"
+                        },
+                        "4": {
+                            "name": "punctuation.separator.key-value.il-ml"
+                        },
+                        "5": {
+                            "name": "entity.name.function.il-ml"
+                        }
                     }
                 },
                 {
                     "name": "meta.block.end.il-ml",
                     "match": "^(\\s*)(#\\/)\\s*$",
                     "captures": {
-                        "2": { "name": "punctuation.definition.block.end.il-ml" }
-                    }
-                }
-            ]
-        },
-        "group_envelopes": {
-            "patterns": [
-                {
-                    "name": "meta.envelope.start.il-ml",
-                    "match": "^\\s*<-([A-Za-z0-9_]+?)_START->\\s*$",
-                    "captures": {
-                        "0": { "name": "punctuation.definition.envelope.il-ml" },
-                        "1": { "name": "entity.name.type.envelope.il-ml" }
-                    }
-                },
-                {
-                    "name": "meta.envelope.end.il-ml",
-                    "match": "^\\s*<-([A-Za-z0-9_]+?)_END->\\s*$",
-                    "captures": {
-                        "0": { "name": "punctuation.definition.envelope.il-ml" },
-                        "1": { "name": "entity.name.type.envelope.il-ml" }
-                    }
-                }
-            ]
-        },
-        "directives": {
-            "patterns": [
-                {
-                    "name": "meta.directive.metadata.il-ml",
-                    "match": "^\\s*(@)(\\w+)(\\s*:)\\s*(.*)$",
-                    "captures": {
-                        "1": { "name": "punctuation.definition.directive.il-ml" },
-                        "2": { "name": "keyword.control.directive.il-ml" },
-                        "3": { "name": "punctuation.separator.key-value.il-ml" },
-                        "4": { "name": "string.unquoted.directive.il-ml" }
-                    }
-                },
-                {
-                    "name": "meta.directive.positive.il-ml",
-                    "match": "^\\s*(\\+)\\s*(.*)$",
-                    "captures": {
-                        "1": { "name": "keyword.operator.positive.il-ml" },
-                        "2": { "name": "string.unquoted.instruction.il-ml" }
-                    }
-                },
-                {
-                    "name": "meta.directive.negative.il-ml",
-                    "match": "^\\s*(-)\\s*(.*)$",
-                    "captures": {
-                        "1": { "name": "keyword.operator.negative.il-ml" },
-                        "2": { "name": "string.unquoted.constraint.il-ml" }
-                    }
-                },
-                {
-                    "name": "meta.directive.note.il-ml",
-                    "match": "^\\s*(~)\\s*(.*)$",
-                    "captures": {
-                        "1": { "name": "keyword.operator.note.il-ml" },
-                        "2": { "name": "string.unquoted.note.il-ml" }
-                    }
-                },
-                {
-                    "name": "meta.directive.purpose.il-ml",
-                    "match": "^\\s*(\\?)\\s*(.*)$",
-                    "captures": {
-                        "1": { "name": "keyword.operator.purpose.il-ml" },
-                        "2": { "name": "string.unquoted.purpose.il-ml" }
-                    }
-                }
-            ]
-        },
-        "sub_blocks": {
-            "patterns": [
-                {
-                    "name": "meta.sub-block.conditional.il-ml",
-                    "match": "^\\s*(#{2,})\\s+(.+?)\\s+(\\(if:\\s*.+?\\))\\s*$",
-                    "captures": {
-                        "1": { "name": "punctuation.definition.heading.il-ml" },
-                        "2": { "name": "entity.name.section.il-ml" },
-                        "3": { "name": "meta.conditional.il-ml" }
-                    }
-                },
-                {
-                    "name": "meta.sub-block.il-ml",
-                    "match": "^\\s*(#{2,})\\s+(.*)$",
-                    "captures": {
-                        "1": { "name": "punctuation.definition.heading.il-ml" },
-                        "2": { "name": "entity.name.section.il-ml" }
+                        "2": {
+                            "name": "punctuation.definition.block.end.il-ml"
+                        }
                     }
                 }
             ]
@@ -157,30 +82,236 @@
         "variables": {
             "patterns": [
                 {
-                    "name": "meta.variable.global.il-ml",
-                    "match": "^\\s*(\\$[a-zA-Z_][a-zA-Z0-9_.]*)\\s*(=)\\s*(.*)$",
+                    "comment": "Variable output with any indentation",
+                    "name": "meta.variable.assignment.il-ml",
+                    "match": "^(\\s*)(>>)\\s*(.*)$",
                     "captures": {
-                        "1": { "name": "variable.other.global.il-ml" },
-                        "2": { "name": "keyword.operator.assignment.il-ml" },
-                        "3": { "name": "string.unquoted.value.il-ml" }
+                        "2": {
+                            "name": "keyword.operator.output.il-ml"
+                        },
+                        "3": {
+                            "name": "meta.variable.expression.il-ml",
+                            "patterns": [
+                                {
+                                    "comment": "The variable being assigned to",
+                                    "name": "variable.other.global.il-ml",
+                                    "match": "^\\s*(\\$[a-zA-Z_][a-zA-Z0-9_.]*)"
+                                },
+                                {
+                                    "comment": "Other variables in the expression",
+                                    "name": "variable.other.global.il-ml",
+                                    "match": "\\$[a-zA-Z_][a-zA-Z0-9_]*"
+                                },
+                                {
+                                    "name": "string.quoted.double.il-ml",
+                                    "match": "\"[^\"]*\""
+                                },
+                                {
+                                    "name": "keyword.operator.logical.il-ml",
+                                    "match": "\\b(true|false)\\b|[!&|=<>+\\-*/]+"
+                                },
+                                {
+                                    "name": "entity.name.function.il-ml",
+                                    "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*(?=\\()"
+                                },
+                                {
+                                    "name": "punctuation.definition.parameters.il-ml",
+                                    "match": "[(),.]"
+                                }
+                            ]
+                        }
                     }
                 },
                 {
-                    "name": "meta.variable.local.il-ml",
-                    "match": "^\\s*(&[a-zA-Z_][a-zA-Z0-9_.]*)\\s*(=)\\s*(.*)$",
-                    "captures": {
-                        "1": { "name": "variable.other.local.il-ml" },
-                        "2": { "name": "keyword.operator.assignment.il-ml" },
-                        "3": { "name": "string.unquoted.value.il-ml" }
-                    }
-                },
-                {
+                    "comment": "Variable references elsewhere",
                     "name": "variable.other.global.il-ml",
                     "match": "\\$[a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)*"
-                },
+                }
+            ]
+        },
+        "conditional_modifiers": {
+            "patterns": [
                 {
-                    "name": "variable.other.local.il-ml",
-                    "match": "&[a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)*"
+                    "name": "meta.conditional.il-ml",
+                    "match": "^\\s*(<<)\\s*(.+?)\\s*$",
+                    "captures": {
+                        "1": {
+                            "name": "punctuation.definition.conditional.begin.il-ml"
+                        },
+                        "2": {
+                            "name": "string.unquoted.conditional.il-ml",
+                            "patterns": [
+                                {
+                                    "name": "variable.other.global.il-ml",
+                                    "match": "\\$[a-zA-Z_][a-zA-Z0-9_]*"
+                                },
+                                {
+                                    "name": "string.quoted.double.il-ml",
+                                    "match": "\"[^\"]*\""
+                                },
+                                {
+                                    "name": "keyword.operator.logical.il-ml",
+                                    "match": "\\b(true|false)\\b|[!&|=<>]+"
+                                },
+                                {
+                                    "name": "entity.name.function.il-ml",
+                                    "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*(?=\\()"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "templates": {
+            "patterns": [
+                {
+                    "name": "meta.template.markdown.il-ml",
+                    "begin": "^(\\s*)(<)([A-Za-z][A-Za-z0-9_]*)(>)\\s*$",
+                    "end": "^(\\1)(</)\\3(>)\\s*$",
+                    "beginCaptures": {
+                        "2": {
+                            "name": "punctuation.definition.template.begin.il-ml"
+                        },
+                        "3": {
+                            "name": "entity.name.type.template.il-ml"
+                        },
+                        "4": {
+                            "name": "punctuation.definition.template.begin.il-ml"
+                        }
+                    },
+                    "endCaptures": {
+                        "2": {
+                            "name": "punctuation.definition.template.end.il-ml"
+                        },
+                        "3": {
+                            "name": "entity.name.type.template.il-ml"
+                        },
+                        "4": {
+                            "name": "punctuation.definition.template.end.il-ml"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#template_markdown_codeblock"
+                        },
+                        {
+                            "include": "#template_markdown_content"
+                        }
+                    ]
+                }
+            ]
+        },
+        "template_markdown_codeblock": {
+            "patterns": [
+                {
+                    "name": "meta.embedded.block.markdown.il-ml",
+                    "begin": "^\\s*```\\s*$",
+                    "end": "^\\s*```\\s*$",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.markdown.codemark.begin"
+                        }
+                    },
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.markdown.codemark.end"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "text.html.markdown#fenced_code_block_content"
+                        }
+                    ]
+                }
+            ]
+        },
+        "template_markdown_content": {
+            "patterns": [
+                {
+                    "begin": "^\\s*(?!```|<\\/[A-Za-z])",
+                    "end": "(?=^\\s*<\\/[A-Za-z][A-Za-z0-9_]*>\\s*$)",
+                    "name": "markup.other.template-content.il-ml",
+                    "patterns": [
+                        {
+                            "name": "markup.bold.markdown",
+                            "match": "\\*\\*([^*]+)\\*\\*"
+                        },
+                        {
+                            "name": "markup.italic.markdown",
+                            "match": "\\*([^*]+)\\*"
+                        },
+                        {
+                            "name": "markup.raw.inline.markdown",
+                            "match": "`([^`]+)`"
+                        },
+                        {
+                            "name": "markup.underline.link.markdown",
+                            "match": "\\[([^\\]]+)\\]\\(([^)]+)\\)"
+                        }
+                    ]
+                }
+            ]
+        },
+        "directives": {
+    "patterns": [
+        {
+            "name": "meta.directive.metadata.il-ml",
+            "match": "^\\s*(@)(\\w+)(\\s*:)\\s*(.*)$",
+            "captures": {
+                "1": { "name": "punctuation.definition.directive.il-ml" },
+                "2": { "name": "keyword.control.directive.il-ml" },
+                "3": { "name": "punctuation.separator.key-value.il-ml" },
+                "4": { "name": "string.unquoted.directive.il-ml" }
+            }
+        },
+        {
+            "name": "meta.directive.imperative.il-ml",
+            "match": "^(\\s*)(!)(?!\\$)\\s*(.*)$",
+            "captures": {
+                "2": { "name": "invalid.illegal.il-ml" },
+                "3": { "name": "invalid.deprecated.il-ml" }
+            }
+        },
+        {
+            "name": "meta.directive.positive.il-ml",
+            "match": "^\\s*(\\+)\\s*(.*)$",
+            "captures": {
+                "1": { "name": "string.regexp.il-ml" },
+                "2": { "name": "string.other.il-ml" }
+            }
+        },
+        {
+            "name": "meta.directive.negative.il-ml",
+            "match": "^\\s*(-)\\s*(.*)$",
+            "captures": {
+                "1": { "name": "constant.numeric.il-ml" },
+                "2": { "name": "constant.other.il-ml" }
+            }
+        },
+        {
+            "name": "meta.directive.note.il-ml",
+            "match": "^\\s*(~)\\s*(.*)$",
+            "captures": {
+                "1": { "name": "comment.line.il-ml" },
+                "2": { "name": "comment.block.il-ml" }
+            }
+        }
+    ]
+},
+        "sub_blocks": {
+            "patterns": [
+                {
+                    "name": "meta.sub-block.il-ml",
+                    "match": "^\\s*(#{2,})\\s+(.*)$",
+                    "captures": {
+                        "1": {
+                            "name": "punctuation.definition.heading.il-ml"
+                        },
+                        "2": {
+                            "name": "entity.name.section.il-ml"
+                        }
+                    }
                 }
             ]
         }
